@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  testApp:
+    build: .
+    image: test
+    container_name: test-container
+    ports:
+      - "8082:8082"
+    restart: always
+    depends_on:
+      - testDb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://testDb:5432/test
+      - SPRING_DATASOURCE_USERNAME=newuser
+      - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SECURITY_JWT_SECRET_KEY=3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+
+  testDb:
+    image: postgres:14-alpine
+    container_name: test-db-container
+    restart: always
+    ports:
+      - "5439:5432"
+    environment:
+      - POSTGRES_USER=newuser
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=test
